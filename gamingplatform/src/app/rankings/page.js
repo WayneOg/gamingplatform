@@ -8,7 +8,7 @@ export default function Rankings() {
   useEffect(() => {
     async function fetchRankings() {
       try {
-        const response = await fetch("http://localhost:8000/api/games/");
+        const response = await fetch("http://127.0.0.1:8000/api/games/");
         const data = await response.json();
         setRankings(data);
       } catch (error) {
@@ -18,31 +18,47 @@ export default function Rankings() {
     fetchRankings();
   }, []);
 
+  const headers = [
+    { id: 'rank', label: 'Rank' },
+    { id: 'player', label: 'Player' },
+    { id: 'points', label: 'Points' },
+    { id: 'wins', label: 'Wins' }
+  ];
+
   return (
     <div className="min-h-screen py-8">
       <h1 className="text-3xl font-bold mb-6">Rankings</h1>
-      {rankings.map((game) => (
-        <div key={game.name} className="mb-8">
+      {rankings.map((game, gameIndex) => (
+        <div key={gameIndex} className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">{game.name}</h2>
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <table className="w-full">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-4 py-2 text-left">Rank</th>
-                  <th className="px-4 py-2 text-left">Player</th>
-                  <th className="px-4 py-2 text-right">Points</th>
-                  <th className="px-4 py-2 text-right">Wins</th>
+                  {headers.map(header => (
+                    <th key={header.id} className="px-4 py-2 text-left">
+                      {header.label}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
-                {game.players.map((player) => (
-                  <tr key={player.username} className="border-t">
-                    <td className="px-4 py-2">{player.rank}</td>
-                    <td className="px-4 py-2">{player.username}</td>
-                    <td className="px-4 py-2 text-right">{player.points}</td>
-                    <td className="px-4 py-2 text-right">{player.wins}</td>
+                {Array.isArray(game.players) ? (
+                  game.players.map((player, playerIndex) => (
+                    <tr key={`${gameIndex}-${playerIndex}`} className="border-t">
+                      <td className="px-4 py-2">{player.rank}</td>
+                      <td className="px-4 py-2">{player.username}</td>
+                      <td className="px-4 py-2 text-right">{player.points}</td>
+                      <td className="px-4 py-2 text-right">{player.wins}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4" className="px-4 py-2 text-center">
+                      No players available
+                    </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>

@@ -14,7 +14,7 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 from gameapp.routing import websocket_urlpatterns
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'yourprojectname.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gamersplatform.settings')
 
 application = ProtocolTypeRouter({
     'http': get_asgi_application(),

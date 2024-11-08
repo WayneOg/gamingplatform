@@ -9,7 +9,7 @@ export default function Tournaments() {
   useEffect(() => {
     async function fetchTournaments() {
       try {
-        const response = await fetch("http://localhost:8000/api/tournaments/");
+        const response = await fetch("http://127.0.0.1:8000/api/tournaments/");
         const data = await response.json();
         setTournaments(data);
       } catch (error) {
@@ -18,6 +18,11 @@ export default function Tournaments() {
     }
     fetchTournaments();
   }, []);
+
+  const handleRemoveTournament = (tournamentId) => {
+    console.log(`Removing tournament with id: ${tournamentId}`); // Debug log
+    setTournaments(prevTournaments => prevTournaments.filter(t => t.id !== tournamentId));
+  };
 
   return (
     <div className="min-h-screen py-8 bg-gradient-to-b from-gray-900 to-gray-800">
@@ -29,7 +34,11 @@ export default function Tournaments() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {tournaments.map(tournament => (
-            <TournamentCard key={tournament.id} tournament={tournament} />
+            <TournamentCard 
+              key={tournament.id} 
+              tournament={tournament} 
+              onRemove={handleRemoveTournament} 
+            />
           ))}
         </div>
       </div>
